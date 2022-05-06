@@ -85,7 +85,7 @@ func Login(c *gin.Context) {
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {
-	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
+	td.AtExpires = time.Now().Add(time.Minute * 60).Unix()
 	td.AccessUuid = uuid.NewV4().String()
 	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
 	td.RefreshUuid = td.AccessUuid + "++" + strconv.Itoa(int(userid))
@@ -146,6 +146,7 @@ func ExtractToken(r *http.Request) string {
 // keyFunc will receive the parsed token and should return the key for validating.
 func VerifyToken(r *http.Request) (token *jwt.Token, err error) {
 	tokenString := ExtractToken(r)
+
 	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -153,10 +154,6 @@ func VerifyToken(r *http.Request) (token *jwt.Token, err error) {
 		return []byte(ACCESS_SECRET), nil
 	})
 
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return token, nil
 	return
 }
 
@@ -175,10 +172,13 @@ func TokenValid(r *http.Request) error {
 
 func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 	token, err := VerifyToken(r)
+
 	if err != nil {
 		return nil, err
 	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
+
 	if ok && token.Valid {
 		accessUuid, ok := claims["access_uuid"].(string)
 		if !ok {
@@ -193,6 +193,7 @@ func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 			UserId:     userId,
 		}, nil
 	}
+
 	return nil, err
 }
 

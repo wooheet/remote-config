@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/models"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +20,6 @@ func Config(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(config)
-
 	// TODO: check stored id, tracker type
 
 	common.GetDB().Create(&models.Configs{
@@ -30,18 +28,22 @@ func Config(c *gin.Context) {
 		StoreId:     config.StoreId,
 	})
 
+	// TODO: token metadata도 저장을 할것인가?
 	//Extract the access token metadata
-	//metadata, err := ExtractTokenMetadata(c.Request)
-	//if err != nil {
-	//	c.JSON(http.StatusUnauthorized, "unauthorized")
-	//	return
-	//}
+	metadata, err := ExtractTokenMetadata(c.Request)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "unauthorized")
+		return
+	}
 
-	//userid, err := FetchAuth(metadata)
-	//if err != nil {
-	//	c.JSON(http.StatusUnauthorized, err.Error())
-	//	return
-	//}
+	userid, err := FetchAuth(metadata)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	log.Println(metadata)
+	log.Println(userid)
 
 	configs := map[string]string{
 		"token":        config.Token,
