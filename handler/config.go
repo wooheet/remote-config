@@ -47,7 +47,6 @@ func Config(c *gin.Context) {
 	configs := map[string]string{
 		"token":        config.Token,
 		"access_uuid":  metadata.AccessUuid,
-		"user_id":      metadata.UserId,
 		"tracker_type": config.TrackerType,
 		"store_id":     config.StoreId,
 	}
