@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/wooheet/remote-config/common"
-	"github.com/wooheet/remote-config/models"
 	"github.com/wooheet/remote-config/routers"
 	"log"
 
@@ -23,8 +22,8 @@ func main() {
 
 	viperInit()
 	common.RedisInit()
-	models.Init()
-	defer models.CloseDB()
+	common.Init()
+	defer common.CloseDB()
 	routers.Init(r)
 
 	log.Fatal(r.Run(":8080"))

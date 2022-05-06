@@ -1,7 +1,8 @@
-package models
+package common
 
 import (
 	"fmt"
+	"github.com/wooheet/remote-config/models"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -18,6 +19,10 @@ func CloseDB() {
 	}
 }
 
+func GetDB() *gorm.DB {
+	return gGormDB
+}
+
 func Init() {
 	db, err := gorm.Open("mysql", dbConnString())
 	if err != nil {
@@ -29,7 +34,7 @@ func Init() {
 	log.Println("[DB] Start DB Migration ... ")
 	log.Println("[DB] Start DB ... ")
 
-	if err := db.AutoMigrate(&Users{}, &Config{}).Error; err != nil {
+	if err := db.AutoMigrate(&models.Users{}, &models.Configs{}).Error; err != nil {
 		log.Println("[DB Error] ", err)
 		panic(err)
 	}

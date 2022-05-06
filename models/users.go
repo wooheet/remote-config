@@ -1,8 +1,11 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 // gen:qs
 type Users struct {
-	ID       uint64 `json:"id"`
-	Username string `json:"username"`
+	gorm.Model
+	ID       uint64 `json:"id" gorm:"primaryKey"`
+	Username string `json:"username" gorm:"primaryKey"`
 	Password string `json:"password"`
 }

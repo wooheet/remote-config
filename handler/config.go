@@ -2,6 +2,8 @@ package handler
 
 import (
 	"fmt"
+	"github.com/wooheet/remote-config/common"
+	"github.com/wooheet/remote-config/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,12 +11,24 @@ import (
 )
 
 func Config(c *gin.Context) {
-	var config requests.Config
+	var config requests.Configs
+
+	// TODO: http type별 분기
+
 	if err := c.ShouldBindJSON(&config); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "invalid json")
 		return
 	}
+
 	fmt.Println(config)
+
+	// TODO: check stored id, tracker type
+
+	common.GetDB().Create(&models.Configs{
+		Token:       config.Token,
+		TrackerType: config.TrackerType,
+		StoreId:     config.StoreId,
+	})
 
 	//Extract the access token metadata
 	//metadata, err := ExtractTokenMetadata(c.Request)
@@ -29,9 +43,11 @@ func Config(c *gin.Context) {
 	//	return
 	//}
 
-	//config.Token = userid
-	//you can proceed to save the Todo to a database
-	//but we will just return it to the caller:
+	configs := map[string]string{
+		"token":        config.Token,
+		"tracker_type": config.TrackerType,
+		"store_id":     config.StoreId,
+	}
 
-	c.JSON(http.StatusCreated, config.Token)
+	c.JSON(http.StatusCreated, configs)
 }

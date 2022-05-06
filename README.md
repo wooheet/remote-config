@@ -22,7 +22,7 @@
 #### API Token 조회
 
 ```azure
-GET /api/v1/config?store_id=hackingrowth
+GET /v1/config?store_id=hackingrowth
 
 Status Code: 200
 
@@ -39,7 +39,7 @@ Response
 
 #### API Token 등록
 ```azure
-POST /api/v1/config
+POST /v1/config
 
 Body
 {
@@ -53,7 +53,7 @@ Status Code: 201
 
 #### API Token 업데이트
 ```azure
-[PUT|PATCH] /api/v1/config?store_id=hackingrowth
+[PUT|PATCH] /v1/config?store_id=hackingrowth
 
 Body
 {
@@ -76,7 +76,7 @@ Response
 
 #### API Token 삭제
 ```azure
-DELETE /api/v1/config?store_id=hackingrowth
+DELETE /v1/config?store_id=hackingrowth
 
 Status Code: 204
 ```

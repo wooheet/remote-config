@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/models"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -49,27 +50,37 @@ func Login(c *gin.Context) {
 	// compare the user from the request, with the one we defined:
 	// TODO: DB에 값이 있는지 확인
 
-	if user.Username != u.Username || user.Password != u.Password {
-		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
-		return
-	}
+	//if user.Username != u.Username || user.Password != u.Password {
+	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+	//	return
+	//}
 
-	// 토큰 발급
-	ts, err := CreateToken(user.ID)
+	td, err := CreateToken(user.ID)
+
+	log.Println(user.ID)
+
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	saveErr := CreateAuth(user.ID, ts)
+	saveErr := CreateAuth(user.ID, td)
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
 
 	tokens := map[string]string{
-		"access_token":  ts.AccessToken,
-		"refresh_token": ts.RefreshToken,
+		"username":      u.Username,
+		"access_token":  td.AccessToken,
+		"refresh_token": td.RefreshToken,
 	}
+
+	// TODO: encrypt password
+	common.GetDB().Create(&models.Users{
+		Username: u.Username,
+		Password: u.Password,
+	})
+
 	c.JSON(http.StatusOK, tokens)
 }
 
