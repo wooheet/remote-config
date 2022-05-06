@@ -29,7 +29,7 @@ func Init() {
 	log.Println("[DB] Start DB Migration ... ")
 	log.Println("[DB] Start DB ... ")
 
-	if err := db.AutoMigrate(&Users{}, &Todo{}).Error; err != nil {
+	if err := db.AutoMigrate(&Users{}, &Config{}).Error; err != nil {
 		log.Println("[DB Error] ", err)
 		panic(err)
 	}

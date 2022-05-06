@@ -3,6 +3,8 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"github.com/wooheet/remote-config/common"
+	"github.com/wooheet/remote-config/models"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,8 +12,6 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/common"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/models"
 	uuid "github.com/satori/go.uuid"
 	"github.com/spf13/viper"
 )
@@ -47,7 +47,8 @@ func Login(c *gin.Context) {
 	}
 
 	// compare the user from the request, with the one we defined:
-	// TODO. DB에 값이 있는지 확인
+	// TODO: DB에 값이 있는지 확인
+
 	if user.Username != u.Username || user.Password != u.Password {
 		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
 		return

@@ -5,11 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/requests"
+	"github.com/wooheet/remote-config/requests"
 )
 
-func CreateTodo(c *gin.Context) {
-	var td requests.Todo
+func Config(c *gin.Context) {
+	var td requests.Config
 	if err := c.ShouldBindJSON(&td); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "invalid json")
 		return

@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/handler"
+	"github.com/wooheet/remote-config/handler"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -17,8 +17,12 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		auth.POST("/login", handler.Login)
 		auth.POST("/logout", handler.Logout)
 	}
-	todo := r.Group("/todo")
+	config := r.Group("/config")
 	{
-		todo.POST("/todo", handler.CreateTodo)
+		config.GET("/token", handler.Config)
+		config.POST("/token", handler.Config)
+		config.PUT("/token", handler.Config)
+		config.PATCH("/token", handler.Config)
+		config.DELETE("/token", handler.Config)
 	}
 }

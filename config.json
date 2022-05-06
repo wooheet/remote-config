@@ -12,7 +12,7 @@
     },
     "token": {
       "ACCESS_SECRET": "your_access_key_here",
-      "REFRESH_SECRET": "your_refrech_key_here"
+      "REFRESH_SECRET": "your_refresh_key_here"
     }
   }
 

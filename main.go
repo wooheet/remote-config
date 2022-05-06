@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/wooheet/remote-config/common"
+	"github.com/wooheet/remote-config/models"
+	"github.com/wooheet/remote-config/routers"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/common"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/models"
-	"github.com/golang-crew/Bolierplate-JWT-Auth/routers"
 	"github.com/spf13/viper"
 )
 

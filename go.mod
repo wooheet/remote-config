@@ -1,4 +1,4 @@
-module github.com/golang-crew/Bolierplate-JWT-Auth
+module github.com/wooheet/remote-config
 
 go 1.14
 
