@@ -9,28 +9,29 @@ import (
 )
 
 func Config(c *gin.Context) {
-	var td requests.Config
-	if err := c.ShouldBindJSON(&td); err != nil {
+	var config requests.Config
+	if err := c.ShouldBindJSON(&config); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "invalid json")
 		return
 	}
-	fmt.Println(td)
+	fmt.Println(config)
 
 	//Extract the access token metadata
-	metadata, err := ExtractTokenMetadata(c.Request)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	//metadata, err := ExtractTokenMetadata(c.Request)
+	//if err != nil {
+	//	c.JSON(http.StatusUnauthorized, "unauthorized")
+	//	return
+	//}
 
-	userid, err := FetchAuth(metadata)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, err.Error())
-		return
-	}
-	td.UserID = userid
+	//userid, err := FetchAuth(metadata)
+	//if err != nil {
+	//	c.JSON(http.StatusUnauthorized, err.Error())
+	//	return
+	//}
+
+	//config.Token = userid
 	//you can proceed to save the Todo to a database
 	//but we will just return it to the caller:
 
-	c.JSON(http.StatusCreated, td)
+	c.JSON(http.StatusCreated, config.Token)
 }
