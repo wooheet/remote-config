@@ -142,8 +142,6 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-// Parse, validate, and return a token.
-// keyFunc will receive the parsed token and should return the key for validating.
 func VerifyToken(r *http.Request) (token *jwt.Token, err error) {
 	tokenString := ExtractToken(r)
 

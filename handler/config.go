@@ -13,6 +13,8 @@ import (
 func Config(c *gin.Context) {
 	var config requests.Configs
 
+	log.Println(c.Request.Method)
+
 	// TODO: http type별 분기
 
 	if err := c.ShouldBindJSON(&config); err != nil {
@@ -29,7 +31,6 @@ func Config(c *gin.Context) {
 	})
 
 	// TODO: token metadata도 저장을 할것인가?
-	//Extract the access token metadata
 	metadata, err := ExtractTokenMetadata(c.Request)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
