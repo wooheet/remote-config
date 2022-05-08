@@ -15,7 +15,7 @@ func Config(c *gin.Context) {
 
 	log.Println(c.Request.Method)
 
-	// TODO: http type별 분기
+	// TODO: http type별 분기 or function 분리
 
 	if err := c.ShouldBindJSON(&config); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "invalid json")

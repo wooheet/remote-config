@@ -47,14 +47,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// compare the user from the request, with the one we defined:
-	// TODO: DB에 값이 있는지 확인
-
-	//if user.Username != u.Username || user.Password != u.Password {
-	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
-	//	return
-	//}
-
+	// TODO: cache에 토큰이 있고, 유효한지 체크
 	td, err := CreateToken(user.ID)
 
 	log.Println(user.ID)
@@ -82,6 +75,37 @@ func Login(c *gin.Context) {
 	})
 
 	c.JSON(http.StatusOK, tokens)
+}
+
+func Logout(c *gin.Context) {
+	metadata, err := ExtractTokenMetadata(c.Request)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	delErr := DeleteTokens(metadata)
+	if delErr != nil {
+		c.JSON(http.StatusUnauthorized, delErr.Error())
+		return
+	}
+	c.JSON(http.StatusOK, "Successfully logged out")
+}
+
+func signup(c *gin.Context) {
+	var u models.Users
+
+	if err := c.ShouldBindJSON(&u); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
+		return
+	}
+	// TODO: DB에 값이 있는지 확인 and verify
+
+	//if user.Username != u.Username || user.Password != u.Password {
+	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+	//	return
+	//}
+
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {
@@ -217,21 +241,6 @@ func DeleteAuth(givenUuid string) (uint64, error) {
 	}
 
 	return uint64(deleted), nil
-}
-
-func Logout(c *gin.Context) {
-	metadata, err := ExtractTokenMetadata(c.Request)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
-
-	delErr := DeleteTokens(metadata)
-	if delErr != nil {
-		c.JSON(http.StatusUnauthorized, delErr.Error())
-		return
-	}
-	c.JSON(http.StatusOK, "Successfully logged out")
 }
 
 func Refresh(c *gin.Context) {
