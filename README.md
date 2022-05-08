@@ -19,7 +19,7 @@
 ## 📄 API Spec
 
 ### Config
-#### API Token 조회
+#### Token 조회
 
 ```azure
 GET /v1/config?store_id=hackingrowth
@@ -37,7 +37,7 @@ Response
 }
 ```
 
-#### API Token 등록
+#### Token 등록
 ```azure
 POST /v1/config
 
@@ -51,7 +51,7 @@ Body
 Status Code: 201
 ```
 
-#### API Token 업데이트
+#### Token 업데이트
 ```azure
 [PUT|PATCH] /v1/config?store_id=hackingrowth
 
@@ -74,11 +74,18 @@ Response
 }
 ```
 
-#### API Token 삭제
+#### Token 삭제
 ```azure
 DELETE /v1/config?store_id=hackingrowth
 
 Status Code: 204
+```
+
+#### Script tag 설치
+```azure
+GET /v1/scripttag?store_id=hackingrowth?tracker_type=mixpanel
+
+Status Code: 200
 ```
 
 ### Auth
