@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 type Configs struct {
 	gorm.Model
-	ID          uint64 `gorm:"primaryKey"`
+	ID          uint64 `json:"id" gorm:"primaryKey"`
 	Token       string `json:"token"`
 	TrackerType string `json:"tracker_type"`
 	StoreId     string `json:"store_id"`

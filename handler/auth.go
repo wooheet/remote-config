@@ -19,7 +19,7 @@ import (
 
 var user = models.Users{
 	ID:       1,
-	Username: "username",
+	Email:    "email",
 	Password: "password",
 }
 
@@ -99,7 +99,7 @@ func signup(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
-	// TODO: DB에 값이 있는지 확인 and verify
+	// TODO: DB에 값이 있는지 확인 and verify email
 
 	//if user.Username != u.Username || user.Password != u.Password {
 	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
