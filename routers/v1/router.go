@@ -16,6 +16,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		auth.POST("/login", handler.Login)
 		auth.POST("/logout", handler.Logout)
+		auth.POST("/signup", handler.Signup)
 	}
 	config := r.Group("/config")
 	{
@@ -24,5 +25,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		config.PUT("/token", handler.Config)
 		config.PATCH("/token", handler.Config)
 		config.DELETE("/token", handler.Config)
+		config.GET("/script-tag", handler.ScriptTag)
 	}
 }

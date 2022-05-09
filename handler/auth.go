@@ -63,16 +63,10 @@ func Login(c *gin.Context) {
 	}
 
 	tokens := map[string]string{
-		"username":      u.Username,
+		"email":         u.Email,
 		"access_token":  td.AccessToken,
 		"refresh_token": td.RefreshToken,
 	}
-
-	// TODO: encrypt password
-	common.GetDB().Create(&models.Users{
-		Username: u.Username,
-		Password: u.Password,
-	})
 
 	c.JSON(http.StatusOK, tokens)
 }
@@ -92,7 +86,7 @@ func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
 
-func signup(c *gin.Context) {
+func Signup(c *gin.Context) {
 	var u models.Users
 
 	if err := c.ShouldBindJSON(&u); err != nil {
@@ -106,6 +100,13 @@ func signup(c *gin.Context) {
 	//	return
 	//}
 
+	// TODO: encrypt password
+	common.GetDB().Create(&models.Users{
+		Email:    u.Email,
+		Password: u.Password,
+	})
+
+	c.JSON(http.StatusOK, u.Email)
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {

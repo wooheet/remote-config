@@ -54,3 +54,7 @@ func Config(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, configs)
 }
+
+func ScriptTag(c *gin.Context) {
+
+}
