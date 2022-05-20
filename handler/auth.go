@@ -20,7 +20,6 @@ import (
 )
 
 var user = models.Users{
-	ID:       1,
 	Email:    "email",
 	Password: "password",
 }
@@ -49,7 +48,32 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// TODO: cache에 토큰이 있고, 유효한지 체크
+	log.Println("Email", u.Email)
+
+	result := common.GetDB().First(&user, "email=?", u.Email)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, "Not found user")
+		return
+	}
+
+	// TODO: user id 추출
+
+	//row := result.Row()
+	//test := row.Scan("email")
+
+	log.Println("db row", user)
+	log.Println("db id1", u.ID)
+	log.Println("db id2", user.ID)
+	log.Println("db Email", user.Email)
+	log.Println("db Password", user.Password)
+
+	err := compareHashAndPassword(user.Password, u.Password)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "Invalid password")
+		return
+	}
 
 	td, err := CreateToken(1)
 
@@ -103,11 +127,6 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, result.Error)
-		return
-	}
-
 	var verifier = emailverifier.NewVerifier()
 
 	ret, err := verifier.Verify(u.Email)
@@ -122,11 +141,6 @@ func Signup(c *gin.Context) {
 		fmt.Println("Email address syntax is invalid")
 		return
 	}
-
-	//if user.Username != u.Username || user.Password != u.Password {
-	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
-	//	return
-	//}
 
 	password, _ := hashPassword(u.Password)
 
@@ -143,6 +157,11 @@ func Signup(c *gin.Context) {
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+func compareHashAndPassword(hashPassword string, password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+	return err
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {
