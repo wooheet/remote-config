@@ -3,8 +3,10 @@ package handler
 import (
 	"errors"
 	"fmt"
+	emailverifier "github.com/AfterShip/email-verifier"
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/models"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,7 +20,6 @@ import (
 )
 
 var user = models.Users{
-	ID:       1,
 	Email:    "email",
 	Password: "password",
 }
@@ -47,17 +48,41 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// TODO: cache에 토큰이 있고, 유효한지 체크
-	td, err := CreateToken(user.ID)
+	log.Println("Email", u.Email)
 
-	log.Println(user.ID)
+	result := common.GetDB().First(&user, "email=?", u.Email)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, "Not found user")
+		return
+	}
+
+	// TODO: user id 추출
+
+	//row := result.Row()
+	//test := row.Scan("email")
+
+	log.Println("db row", user)
+	//log.Println("db id1", u.ID)
+	//log.Println("db id2", user.ID)
+	log.Println("db Email", user.Email)
+	log.Println("db Password", user.Password)
+
+	err := compareHashAndPassword(user.Password, u.Password)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "Invalid password")
+		return
+	}
+
+	td, err := CreateToken(1)
 
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	saveErr := CreateAuth(user.ID, td)
+	saveErr := CreateAuth(1, td)
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
@@ -93,20 +118,50 @@ func Signup(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
-	// TODO: DB에 값이 있는지 확인 and verify email
 
-	//if user.Username != u.Username || user.Password != u.Password {
-	//	c.JSON(http.StatusUnauthorized, "Please provide valid login details")
-	//	return
-	//}
+	result := common.GetDB().First(&user, "email=?", u.Email)
 
-	// TODO: encrypt password
+	if result.RowsAffected >= 1 {
+		fmt.Println(result.RowsAffected)
+		c.JSON(http.StatusBadRequest, "Already user")
+		return
+	}
+
+	var verifier = emailverifier.NewVerifier()
+
+	ret, err := verifier.Verify(u.Email)
+	log.Println(u.Email)
+
+	if err != nil {
+		fmt.Println("Verify email address failed, error is: ", err)
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	if !ret.Syntax.Valid {
+		fmt.Println("Email address syntax is invalid")
+		return
+	}
+
+	password, _ := hashPassword(u.Password)
+
+	log.Println("Email", u.Email)
+
 	common.GetDB().Create(&models.Users{
 		Email:    u.Email,
-		Password: u.Password,
+		Password: password,
 	})
 
 	c.JSON(http.StatusOK, u.Email)
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func compareHashAndPassword(hashPassword string, password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+	return err
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {
@@ -142,7 +197,7 @@ func CreateToken(userid uint64) (td TokenDetails, err error) {
 }
 
 func CreateAuth(userid uint64, td TokenDetails) (err error) {
-	client := common.GetClient()
+	client := common.GetRedisClient()
 
 	at := time.Unix(td.AtExpires, 0) //converting Unix to UTC
 	rt := time.Unix(td.RtExpires, 0)
@@ -221,7 +276,7 @@ func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 }
 
 func FetchAuth(authD *AccessDetails) (uint64, error) {
-	client := common.GetClient()
+	client := common.GetRedisClient()
 	userid, err := client.Get(authD.AccessUuid).Result()
 	if err != nil {
 		return 0, err
@@ -235,7 +290,7 @@ func FetchAuth(authD *AccessDetails) (uint64, error) {
 }
 
 func DeleteAuth(givenUuid string) (uint64, error) {
-	client := common.GetClient()
+	client := common.GetRedisClient()
 	deleted, err := client.Del(givenUuid).Result()
 	if err != nil {
 		return 0, err
@@ -316,7 +371,7 @@ func Refresh(c *gin.Context) {
 }
 
 func DeleteTokens(authD *AccessDetails) error {
-	client := common.GetClient()
+	client := common.GetRedisClient()
 
 	//get the refresh uuid
 	refreshUuid := fmt.Sprintf("%s++%d", authD.AccessUuid, authD.UserId)
