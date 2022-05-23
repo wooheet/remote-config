@@ -120,6 +120,9 @@ github.com/swaggo/gin-swagger/swaggerFiles
 github.com/swaggo/swag
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
+# github.com/wagslane/go-password-validator v0.3.0
+## explicit
+github.com/wagslane/go-password-validator
 # golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 ## explicit
 golang.org/x/crypto/bcrypt

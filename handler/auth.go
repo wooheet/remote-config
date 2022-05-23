@@ -4,10 +4,9 @@ import (
 	"errors"
 	"fmt"
 	emailverifier "github.com/AfterShip/email-verifier"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/models"
-	"golang.org/x/crypto/bcrypt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -58,7 +57,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	err := compareHashAndPassword(user.Password, u.Password)
+	err := common.CompareHashAndPassword(user.Password, u.Password)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "Invalid password")
@@ -114,7 +113,6 @@ func Signup(c *gin.Context) {
 		Where("email = ?", u.Email).Scan(&user)
 
 	if result.RowsAffected >= 1 {
-		fmt.Println(result.RowsAffected)
 		c.JSON(http.StatusBadRequest, "Already user")
 		return
 	}
@@ -122,7 +120,6 @@ func Signup(c *gin.Context) {
 	var verifier = emailverifier.NewVerifier()
 
 	ret, err := verifier.Verify(u.Email)
-	log.Println(u.Email)
 
 	if err != nil {
 		fmt.Println("Verify email address failed, error is: ", err)
@@ -133,9 +130,19 @@ func Signup(c *gin.Context) {
 		fmt.Println("Email address syntax is invalid")
 		return
 	}
-	// TODO: validation password
 
-	password, _ := hashPassword(u.Password)
+	entropy := passwordvalidator.GetEntropy("longpassword")
+	// entropy is a float64, representing the strength in base 2 (bits)
+
+	pwErr := passwordvalidator.Validate(u.Password, entropy)
+
+	if pwErr != nil {
+		fmt.Println(pwErr)
+		c.JSON(http.StatusBadRequest, pwErr)
+		return
+	}
+
+	password, _ := common.HashPassword(u.Password)
 
 	username := ""
 
@@ -158,16 +165,6 @@ func Signup(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, u.Email)
-}
-
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func compareHashAndPassword(hashPassword string, password string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
-	return err
 }
 
 func CreateToken(userid uint64) (td TokenDetails, err error) {

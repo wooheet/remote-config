@@ -14,6 +14,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.7.1
 	github.com/swaggo/gin-swagger v1.2.0
+	github.com/wagslane/go-password-validator v0.3.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
 )
