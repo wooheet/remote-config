@@ -20,6 +20,7 @@ import (
 )
 
 var user = models.Users{
+	ID:       1,
 	Email:    "email",
 	Password: "password",
 }
@@ -48,25 +49,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	log.Println("Email", u.Email)
-
-	result := common.GetDB().First(&user, "email=?", u.Email)
+	result := common.GetDB().Table("users").
+		Select("id, email, password").
+		Where("email = ?", u.Email).Scan(&user)
 
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, "Not found user")
 		return
 	}
-
-	// TODO: user id 추출
-
-	//row := result.Row()
-	//test := row.Scan("email")
-
-	log.Println("db row", user)
-	log.Println("db id1", u.ID)
-	log.Println("db id2", user.ID)
-	log.Println("db Email", user.Email)
-	log.Println("db Password", user.Password)
 
 	err := compareHashAndPassword(user.Password, u.Password)
 
@@ -75,14 +65,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	td, err := CreateToken(1)
+	td, err := CreateToken(user.ID)
 
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	saveErr := CreateAuth(1, td)
+	saveErr := CreateAuth(user.ID, td)
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
@@ -119,7 +109,9 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	result := common.GetDB().First(&user, "email=?", u.Email)
+	result := common.GetDB().Table("users").
+		Select("id, email, password").
+		Where("email = ?", u.Email).Scan(&user)
 
 	if result.RowsAffected >= 1 {
 		fmt.Println(result.RowsAffected)
@@ -141,15 +133,29 @@ func Signup(c *gin.Context) {
 		fmt.Println("Email address syntax is invalid")
 		return
 	}
+	// TODO: validation password
 
 	password, _ := hashPassword(u.Password)
 
-	log.Println("Email", u.Email)
+	username := ""
 
-	common.GetDB().Create(&models.Users{
+	if u.Username == "" {
+		emailToUsername := strings.Split(u.Email, "@")
+		username = emailToUsername[0]
+	} else {
+		username = u.Username
+	}
+
+	createResult := common.GetDB().Create(&models.Users{
 		Email:    u.Email,
+		Username: username,
 		Password: password,
 	})
+
+	if createResult.Error != nil {
+		c.JSON(http.StatusBadRequest, createResult.Error)
+		return
+	}
 
 	c.JSON(http.StatusOK, u.Email)
 }

@@ -1,3 +1,6 @@
+# github.com/AfterShip/email-verifier v1.3.0
+## explicit
+github.com/AfterShip/email-verifier
 # github.com/PuerkitoBio/purell v1.1.0
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
@@ -56,6 +59,10 @@ github.com/hashicorp/hcl/hcl/token
 github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
+# github.com/hbollon/go-edlib v1.4.0
+github.com/hbollon/go-edlib
+github.com/hbollon/go-edlib/internal/orderedmap
+github.com/hbollon/go-edlib/internal/utils
 # github.com/jinzhu/gorm v1.9.16
 ## explicit
 github.com/jinzhu/gorm
@@ -113,7 +120,12 @@ github.com/swaggo/gin-swagger/swaggerFiles
 github.com/swaggo/swag
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
-# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+# golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+## explicit
+golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blowfish
+# golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
+## explicit
 golang.org/x/net/context
 golang.org/x/net/idna
 golang.org/x/net/webdav
@@ -164,3 +176,5 @@ google.golang.org/protobuf/types/descriptorpb
 gopkg.in/ini.v1
 # gopkg.in/yaml.v2 v2.4.0
 gopkg.in/yaml.v2
+# h12.io/socks v1.0.3
+h12.io/socks
