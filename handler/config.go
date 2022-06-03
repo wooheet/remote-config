@@ -1,21 +1,20 @@
 package handler
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/models"
+	"github.com/wooheet/remote-config/requests"
 	"log"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
-	"github.com/wooheet/remote-config/requests"
 )
 
-func Config(c *gin.Context) {
+func Retrieve(c *gin.Context) {
+	c.JSON(http.StatusOK, "Retrieve")
+}
+
+func Registry(c *gin.Context) {
 	var config requests.Configs
-
-	log.Println(c.Request.Method)
-
-	// TODO: http type별 분기 or function 분리
 
 	if err := c.ShouldBindJSON(&config); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "invalid json")
@@ -24,13 +23,6 @@ func Config(c *gin.Context) {
 
 	// TODO: check stored id, tracker type
 
-	common.GetDB().Create(&models.Configs{
-		Token:       config.Token,
-		TrackerType: config.TrackerType,
-		StoreId:     config.StoreId,
-	})
-
-	// TODO: token metadata도 저장을 할것인가?
 	metadata, err := ExtractTokenMetadata(c.Request)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
@@ -47,14 +39,31 @@ func Config(c *gin.Context) {
 
 	configs := map[string]string{
 		"token":        config.Token,
-		"access_uuid":  metadata.AccessUuid,
 		"tracker_type": config.TrackerType,
 		"store_id":     config.StoreId,
 	}
 
+	// TODO: insert user id
+	common.GetDB().Create(&models.Configs{
+		Token:       config.Token,
+		TrackerType: config.TrackerType,
+		StoreId:     config.StoreId,
+		Users: models.Users{
+			ID: userid,
+		},
+	})
+
 	c.JSON(http.StatusCreated, configs)
 }
 
-func ScriptTag(c *gin.Context) {
+func Update(c *gin.Context) {
+	c.JSON(http.StatusOK, "Update")
+}
 
+func Delete(c *gin.Context) {
+	c.JSON(http.StatusOK, "Delete")
+}
+
+func ScriptTag(c *gin.Context) {
+	c.JSON(http.StatusOK, "ScriptTag")
 }

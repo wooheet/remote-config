@@ -20,11 +20,11 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}
 	config := r.Group("/config")
 	{
-		config.GET("/token", handler.Config)
-		config.POST("/token", handler.Config)
-		config.PUT("/token", handler.Config)
-		config.PATCH("/token", handler.Config)
-		config.DELETE("/token", handler.Config)
+		config.GET("/token", handler.Retrieve)
+		config.POST("/token", handler.Registry)
+		config.PUT("/token", handler.Update)
+		config.PATCH("/token", handler.Update)
+		config.DELETE("/token", handler.Delete)
 		config.GET("/script-tag", handler.ScriptTag)
 	}
 }
