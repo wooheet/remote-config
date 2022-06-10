@@ -11,8 +11,8 @@ import (
 )
 
 func viperInit() {
+	viper.SetConfigType("config")
 	viper.SetConfigFile(`./config.json`)
-	viper.SetConfigType("yaml")
 
 	err := viper.ReadInConfig()
 	if err != nil {
