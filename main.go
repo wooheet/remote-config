@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/wooheet/remote-config/common"
 	"github.com/wooheet/remote-config/routers"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -11,6 +12,8 @@ import (
 
 func viperInit() {
 	viper.SetConfigFile(`./config.json`)
+	viper.SetConfigType("yaml")
+
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
