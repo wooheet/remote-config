@@ -3,14 +3,15 @@ package handler
 import (
 	"errors"
 	"fmt"
-	emailverifier "github.com/AfterShip/email-verifier"
-	passwordvalidator "github.com/wagslane/go-password-validator"
-	"github.com/wooheet/remote-config/common"
-	"github.com/wooheet/remote-config/models"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	emailverifier "github.com/AfterShip/email-verifier"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/models"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"

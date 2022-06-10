@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/wooheet/remote-config/common"
-	"github.com/wooheet/remote-config/models"
-	"github.com/wooheet/remote-config/requests"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/models"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/requests"
 )
 
 func Retrieve(c *gin.Context) {

@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wooheet/remote-config/handler"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/handler"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

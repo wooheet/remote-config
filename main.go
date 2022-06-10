@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/wooheet/remote-config/common"
-	"github.com/wooheet/remote-config/routers"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	"github.com/hackinggrowth/cafemetrics/metrics-api/routers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"

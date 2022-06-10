@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	router "github.com/wooheet/remote-config/routers/v1"
+	router "github.com/hackinggrowth/cafemetrics/metrics-api/routers/v1"
 
 	ginSwagger "github.com/swaggo/gin-swagger"
 	swaggerFiles "github.com/swaggo/gin-swagger/swaggerFiles"

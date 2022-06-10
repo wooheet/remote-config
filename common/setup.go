@@ -2,8 +2,9 @@ package common
 
 import (
 	"fmt"
-	"github.com/wooheet/remote-config/models"
 	"log"
+
+	"github.com/hackinggrowth/cafemetrics/metrics-api/models"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
