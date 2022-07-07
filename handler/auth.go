@@ -9,8 +9,9 @@ import (
 	"time"
 
 	emailverifier "github.com/AfterShip/email-verifier"
-	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	common "github.com/hackinggrowth/cafemetrics/metrics-api/internal/commons"
 	"github.com/hackinggrowth/cafemetrics/metrics-api/models"
+	utils "github.com/hackinggrowth/cafemetrics/metrics-api/pkg"
 	passwordvalidator "github.com/wagslane/go-password-validator"
 
 	"github.com/dgrijalva/jwt-go"
@@ -42,7 +43,7 @@ type TokenDetails struct {
 var ACCESS_SECRET = viper.GetString(`token.ACCESS_SECRET`)
 var REFRESH_SECRET = viper.GetString(`token.REFRESH_SECRET`)
 
-func Login(c *gin.Context) {
+func Signin(c *gin.Context) {
 	var u models.Users
 	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
@@ -58,7 +59,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	err := common.CompareHashAndPassword(user.Password, u.Password)
+	err := utils.CompareHashAndPassword(user.Password, u.Password)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "Invalid password")
@@ -143,7 +144,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	password, _ := common.HashPassword(u.Password)
+	password, _ := utils.HashPassword(u.Password)
 
 	username := ""
 

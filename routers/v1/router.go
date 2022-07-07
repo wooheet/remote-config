@@ -14,7 +14,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}
 	auth := r.Group("/auth")
 	{
-		auth.POST("/login", handler.Login)
+		auth.POST("/signin", handler.Signin)
 		auth.POST("/logout", handler.Logout)
 		auth.POST("/signup", handler.Signup)
 	}

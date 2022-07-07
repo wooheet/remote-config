@@ -1,0 +1,39 @@
+version: '3.8'
+
+x-metrics-api-environemnt: &metrics-api-environemnt
+   AWS_ACCESS_KEY_ID: 'METRICS_API_ACCESS_KEY'
+   AWS_SECRET_ACCESS_KEY: 'METRICS_API_SECRET_ACCESS_KEY'
+   REGION: 'ap-northeast-2'
+x-metrics-api-depends-on: &metrics-api-depends-on
+  - mysql
+x-metrics-api-links: &metrics-api-links
+  - mysql
+
+services:
+  metrics-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    restart: always
+    env_file: .env
+    environment: *metrics-api-environemnt
+    depends_on: *metrics-api-depends-on
+    links: *metrics-api-links
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/build
+    command: reflex -r "\.go$$" -s -- sh -c "go run ./"
+  mysql:
+    image: "amazon/mysql-local:latest"
+    container_name: mysql-local
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_home:/home/mysql/data
+    restart: always
+    working_dir: /home/mysql
+
+volumes:
+  mysql_home: {}

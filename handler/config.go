@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	common "github.com/hackinggrowth/cafemetrics/metrics-api/internal/commons"
 	"github.com/hackinggrowth/cafemetrics/metrics-api/models"
 	"github.com/hackinggrowth/cafemetrics/metrics-api/requests"
 )

@@ -12,8 +12,6 @@
 - MySQL
 - Redis
 - Docker
-- Travis CI
-- Deepsource Go
 
 
 ## 📄 API Spec
@@ -90,9 +88,9 @@ Status Code: 200
 
 ### Auth
 
-#### Login
+#### Signin
 ```azure
-POST /v1/login
+POST /v1/signin
 
 Status Code: 201
 ```

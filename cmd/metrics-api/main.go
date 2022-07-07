@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/hackinggrowth/cafemetrics/metrics-api/common"
+	common "github.com/hackinggrowth/cafemetrics/metrics-api/internal/commons"
 	"github.com/hackinggrowth/cafemetrics/metrics-api/routers"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func viperInit() {
-	viper.SetConfigType("config")
+	viper.SetConfigType("json")
 	viper.SetConfigFile(`./config.json`)
 
 	err := viper.ReadInConfig()
